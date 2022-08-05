@@ -118,12 +118,13 @@ struct node* mulLinkList(struct node* p, struct node* q)
 {
   struct node* result = (struct node*)malloc(sizeof(struct node));
   struct node* temp = result;
-  struct node* temp2 = result;
   struct node* y = temp;
-  struct node* z = temp2;
   struct node* a = p;
   struct node* b = q;
-  int x,i, carry=0, flag=0;
+  
+  int x,i,j, carry=0, flag=0;
+
+  
   while(b!=NULL)
     {
       while(a!=NULL)
@@ -141,7 +142,7 @@ struct node* mulLinkList(struct node* p, struct node* q)
           }
 
           
-          x = b->data * a->data;
+          x = (b->data)* (a->data);
           temp->data = (x%10) + carry;
           if((x-10) >= 0)
           {
@@ -156,11 +157,31 @@ struct node* mulLinkList(struct node* p, struct node* q)
           temp=temp->next;
           
         }
+      j=0;
+      struct node* x =temp;
+      while(x!=NULL)
+        {
+          j++;
+          x=x->next;
+        }
+      display(temp);
+      reverseLinkList(temp,j);
+      if(flag==0){
+        while(temp!=NULL){
+          result->data=temp->data;
+           result->next = (struct node*)malloc(sizeof(struct node));
+          result=result->next;
+          temp=temp->next;
+        }
+      }
+      else{
+         struct node* add = addLinkList(result,temp);
+      }
+      
       temp=y;
-      temp2 = temp;
       b=b->next;
       a=p;
-      carry=0;
+      // carry=0;
       flag++;
     }
 
@@ -203,6 +224,7 @@ int main()
   printf("\n");
   
   // adding two link lists
+  struct node* result = (struct node*)malloc(sizeof(struct node));
   struct node* add = addLinkList(first,second);
   i=0;
   struct node* temp =add;
@@ -219,6 +241,6 @@ int main()
   // Multiplying two link lists
   struct node *mul = mulLinkList(first, second);
   display(mul);
-  // AddIntegers(x,y);
+  
   return 0;
 }
