@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include "string.h">
+struct studentRecord{
+  char rollno[15];
+  char name[15];
+  float cgpa;
+};
+
+int main() {
+  struct studentRecord record[20];
+  FILE *file = fopen("text_file.txt", "r");
+  FILE *fileWrite = fopen("output.txt", "w");
+
+  
+  if(file == NULL)
+  {
+    perror("Unable to open file");
+    exit(1);
+  }
+  
+  char line[15];
+  // int n = fscanf(file,"%d",line);
+ 
+  char ch = fgetc(file);
+  // printf("%c \n", ch);
+  int n = ch - '0';
+  printf("%d \n", n);
+   char names[n];
+  // while ((ch = fgetc(file)) != EOF)
+  //       {
+  //           printf("%c", ch);
+  //       }
+  // while(fgets(line, sizeof(line), file))
+  //   {
+  //     printf("%s", line);
+  //     fprintf(fileWrite, line);
+  //   }
+  int i=0;
+  while(fscanf(file, "%*s %s %*s", line) == 1)
+    {
+      printf("%s \n", line);
+      // names[i] = line;
+      strncpy(&names[i], line, 3);
+      i = i+ 3;
+    }
+  printf("%s", &names[0]);
+  // for(i=0;i<n;i++)
+  //   printf("%s \n", &names[i]);
+
+  // ................................
+  // i = 0;
+  // char rollno[15];
+  // char name[15];
+  // float cgpa;
+  // // ifstream ifs("student-file.txt");
+  //   while(! file.eof()){
+  //       file >> rollno >> name >> cgpa;
+  //       strcpy(record[i].rollno, rollno);
+  //       strcpy(record[i].name, name);
+  //       record[i].cgpa = cgpa;
+  //       i++;
+  //   }  
+    
+  //   // cout << "\n\n\tSORTED BY LAST NAME =================\n\n";
+  //   struct studentRecord t;
+  //   for(int i=0;i<19;i++) {
+  //       for(int j=0;j<19-1;j++) {
+  //           if(record[j].name>record[j+1].name) {
+  //               t=record[j];
+  //               record[j]=record[j+1];
+  //               record[j+1]=t;
+  //           }
+  //       }
+  //   }
+    
+  //   for (int k = 0; k < 19; k++) {
+  //       cout << "\n\t";
+  //       cout.width(15); cout << left << records[k].lastname;
+  //       cout.width(15); cout << left << records[k].firstname << left << records[k].grade << endl;
+  //   }
+    
+  //   ifs.close();
+  // .....................
+  // file = fopen("output.txt", "w");
+  // fprintf(file);
+  fclose(fileWrite);
+  return 0;
+}
