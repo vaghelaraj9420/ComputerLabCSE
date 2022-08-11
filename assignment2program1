@@ -12,6 +12,8 @@ struct date
   char name[100];
 };
 
+// create another structure to store the date differences and the dates and the corresponding student names
+
 char* splitString(char str[], int start, int len)
 {
   int i,j=0;
@@ -52,7 +54,7 @@ int calcLeapYears(struct date d1, struct date d2)
       else if ((i%100 != 0) && (i%4 == 0))
         leapYearDays++;
     }
-  
+
   if(d1.month<=2)
   {
     if(d1.year % 400 == 0)
@@ -60,6 +62,7 @@ int calcLeapYears(struct date d1, struct date d2)
     else if ((d1.year % 100 != 0) && (d1.year % 4 ==0))
       leapYearDays++;
   }
+
   
   if(d2.month<=2)
   {
@@ -108,7 +111,10 @@ int dateDifference(struct date d1, struct date d2)
   int LeapYearDays = calcLeapYears(d1,d2);
   diff += LeapYearDays;
 
-  return diff;
+  if(diff<0)
+    return diff*(-1);
+  else
+    return diff;
 }
 
 int dateCompare(struct date d1, struct date d2)
@@ -237,10 +243,13 @@ int main(void) {
     {
       for(j=i+1;j<n;j++)
         {
-            if(dateCompare(d[i],d[j]) == 1)
+            // if(dateCompare(d[i],d[j]) == 1)
+              // printf("\n%d", dateDifference(d[j],d[i]));
               printf("\n%d", dateDifference(d[j],d[i]));
         }
     }
+
+  printf("\n %d", calcLeapYears(d[2], d[3]));
   fclose(file);
   fclose(file2);
   return 0;
