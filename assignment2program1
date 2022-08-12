@@ -223,6 +223,67 @@ void Algorithm_A(struct date d[], int n, int k)
 }
 
 
+void Algorithm_B(struct date d[], int n, int k)
+{
+  struct date sortedDates[n];
+  memcpy(sortedDates, d, sizeof(sortedDates));
+  int i,j,z;
+  z=0;
+
+
+  // Sorting DOBs of students
+  struct date temp;
+  for(i=0;i<n-1;i++)
+    {
+      for(j=i+1;j<n;j++)
+        {
+          if(dateCompare(sortedDates[i], sortedDates[j]) == 1)
+          {
+            temp = sortedDates[i];
+            sortedDates[i] = sortedDates[j];
+            sortedDates[j] = temp;
+          }
+        }
+    }
+
+   for(i=0;i<n;i++)
+    {
+      printf("\n%d ", sortedDates[i].day);
+      printf("%d ", sortedDates[i].month);
+      printf("%d ", sortedDates[i].year);
+    }
+
+  int diff[n-1];
+  struct DateDiff dateDiff[n-1];
+  for(i=0;i<n-1;i++)
+    {
+      dateDiff[i].diff = dateDifference(sortedDates[i+1], sortedDates[i]);
+      dateDiff[i].d1 = sortedDates[i];
+      dateDiff[i].d2 = sortedDates[i+1];
+    }
+
+
+  printf("\n");
+  struct DateDiff temp2;
+  for(i=0;i<n-1;i++)
+    {
+      if(dateDiff[i].diff > dateDiff[i+1].diff)
+      {
+        temp2 = dateDiff[i];
+        dateDiff[i] = dateDiff[i+1];
+        dateDiff[i+1] = temp2;
+      }
+    }
+
+  printf("\nTop K Disjoint pairs using Algorithm B are:\n");
+  for(i=0;i<k;i++)
+    {
+      printf("\n %d ", dateDiff[i].diff);
+      printf("%s ", dateDiff[i].d1.name);
+      printf("%s ", dateDiff[i].d2.name);
+    }
+}
+
 int main(void) {
   FILE *file = fopen("student.txt", "r");
 
@@ -234,7 +295,7 @@ int main(void) {
 
   char line[15];
   
-  char ch = fgetc(file);
+  char ch = fgetc(file);  // Initializing N
   int n = ch - '0';
 
    // Collecting names...........
@@ -245,7 +306,8 @@ int main(void) {
       strcpy(names[i], line);
       i = i+1;
     }
-  int k = atoi(names[0]);
+  int k = atoi(names[0]); // Initializing K
+  
   for(i=0;i<n+1;i++)
   {
       strcpy(names[i], names[i+1]);
@@ -309,7 +371,7 @@ int main(void) {
 
   Algorithm_A(d, n, k);
   // Copied from here........................
-
+  Algorithm_B(d, n, k);
   
   fclose(file);
   fclose(file2);
