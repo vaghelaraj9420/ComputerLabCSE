@@ -13,6 +13,11 @@ struct date
 };
 
 // create another structure to store the date differences and the dates and the corresponding student names
+struct DateDiff
+{
+  int diff;
+  struct date d1,d2;
+};
 
 char* splitString(char str[], int start, int len)
 {
@@ -141,6 +146,82 @@ int dateCompare(struct date d1, struct date d2)
 }
 
 
+int fact(int n)
+{
+    int i,f=1;
+    for(i=1;i<=n;i++)
+    {
+        f=f*i;
+    }
+    return f;
+}
+
+
+void Algorithm_A(struct date d[], int n, int k)
+{
+   int ncr, j, i;
+  ncr=fact(n)/(fact(2)*fact(n-2));
+  struct DateDiff dateDiff[ncr];
+  int z = 0;
+
+  for(i=0;i<n;i++)
+    {
+      for(j=i+1;j<n;j++)
+        {
+            // if(dateCompare(d[i],d[j]) == 1)
+              // printf("\n%d", dateDifference(d[j],d[i]));
+              printf("\n%d", dateDifference(d[j],d[i]));
+              dateDiff[z].diff = dateDifference(d[j],d[i]);
+              dateDiff[z].d1 = d[j];
+              dateDiff[z].d2 = d[i];
+              z++;
+        }
+    }
+
+  
+  struct DateDiff temp;
+  for(i=0;i<ncr;i++)
+    {
+      for(j=i+1;j<ncr;j++)
+        {
+          if(dateDiff[i].diff > dateDiff[j].diff)
+          {
+            temp = dateDiff[i];
+            dateDiff[i] = dateDiff[j];
+            dateDiff[j] = temp;
+          }
+        }
+    }
+  printf("\n");
+  for(i=0;i<ncr;i++)
+    {
+      printf("\n%d ", dateDiff[i].diff);
+      printf("%s ", dateDiff[i].d1.name);
+      printf("%d ", dateDiff[i].d1.day);
+      printf("%d ", dateDiff[i].d1.month);
+      printf("%d ", dateDiff[i].d1.year);
+      printf("%s ", dateDiff[i].d2.name);
+      printf("%d ", dateDiff[i].d2.day);
+      printf("%d ", dateDiff[i].d2.month);
+      printf("%d ", dateDiff[i].d2.year);
+    }
+
+  printf("\nTop K Disjoint Pairs are:\n");
+  for(i=0; i<k; i++)
+    {
+      printf("\n%d ", dateDiff[i].diff);
+      printf("%s ", dateDiff[i].d1.name);
+      printf("%d ", dateDiff[i].d1.day);
+      printf("%d ", dateDiff[i].d1.month);
+      printf("%d ", dateDiff[i].d1.year);
+      printf("%s ", dateDiff[i].d2.name);
+      printf("%d ", dateDiff[i].d2.day);
+      printf("%d ", dateDiff[i].d2.month);
+      printf("%d ", dateDiff[i].d2.year);
+    }
+ 
+}
+
 
 int main(void) {
   FILE *file = fopen("student.txt", "r");
@@ -213,12 +294,6 @@ int main(void) {
       d[i].day = atoi(splitString(dob[i], 0, 2));
       d[i].month = atoi(splitString(dob[i], 2, 2));
       d[i].year = atoi(splitString(dob[i], 4, 4));
-      // strcpy(d[i].day, splitString(dob[i], 0, 2));
-      // strcpy(d[i].month, splitString(dob[i], 2, 2));
-      // strcpy(d[i].year, splitString(dob[i], 4, 4));
-      // d[i].day[2] = '\0';
-      // d[i].month[2] = '\0';
-      // d[i].year[4] = '\0';
     }
 
   printf("\n");
@@ -232,24 +307,10 @@ int main(void) {
        printf("Year: %d \n", d[i].year);
     }
 
-  int j;
-  // if(dateCompare(d[0],d[1]) == 1)
-  //   printf("\n%d", dateDifference(d[1],d[0]));
-  // if(dateCompare(d[2],d[1]) == 1)
-  //   printf("\n%d", dateDifference(d[1],d[2]));
-  // printf("\n%d", dateDifference(d[3],d[2]));
-  // printf("\n%d", calcLeapYears(d[3],d[2]));
-  for(i=0;i<n;i++)
-    {
-      for(j=i+1;j<n;j++)
-        {
-            // if(dateCompare(d[i],d[j]) == 1)
-              // printf("\n%d", dateDifference(d[j],d[i]));
-              printf("\n%d", dateDifference(d[j],d[i]));
-        }
-    }
+  Algorithm_A(d, n, k);
+  // Copied from here........................
 
-  printf("\n %d", calcLeapYears(d[2], d[3]));
+  
   fclose(file);
   fclose(file2);
   return 0;
