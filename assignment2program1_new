@@ -18,6 +18,12 @@ struct DateDiff {
   struct date d1, d2;
 };
 
+struct DisjointSet
+{
+    char name1[100];
+    char name2[100];
+};
+
 char *splitString(char str[], int start, int len) {
   int i, j = 0;
   char *data = malloc(sizeof(char) * (len + 1));
@@ -167,7 +173,7 @@ void Algorithm_A(struct date d[], int n, int k) {
   //.................
 
   struct DateDiff temp;
-  for (i = 0; i < ncr-1; i++) {
+  for (i = 0; i < ncr - 1; i++) {
     for (j = i + 1; j < ncr; j++) {
       if (dateDiff[i].diff > dateDiff[j].diff) {
         temp = dateDiff[i];
@@ -177,29 +183,45 @@ void Algorithm_A(struct date d[], int n, int k) {
     }
   }
   printf("\n");
-  for (i = 0; i < ncr; i++) {
-    printf("\n%d ", dateDiff[i].diff);
-    printf("%s ", dateDiff[i].d1.name);
-    printf("%d ", dateDiff[i].d1.day);
-    printf("%d ", dateDiff[i].d1.month);
-    printf("%d ", dateDiff[i].d1.year);
-    printf("%s ", dateDiff[i].d2.name);
-    printf("%d ", dateDiff[i].d2.day);
-    printf("%d ", dateDiff[i].d2.month);
-    printf("%d ", dateDiff[i].d2.year);
-  }
+  // for (i = 0; i < ncr; i++) {
+  //   printf("\n%d ", dateDiff[i].diff);
+  //   printf("%s ", dateDiff[i].d1.name);
+  //   printf("%d ", dateDiff[i].d1.day);
+  //   printf("%d ", dateDiff[i].d1.month);
+  //   printf("%d ", dateDiff[i].d1.year);
+  //   printf("%s ", dateDiff[i].d2.name);
+  //   printf("%d ", dateDiff[i].d2.day);
+  //   printf("%d ", dateDiff[i].d2.month);
+  //   printf("%d ", dateDiff[i].d2.year);
+  // }
 
+  struct date tempDates[n];
+  // Copying structure "d" to structure "tempDates"
+  memcpy(tempDates, d, sizeof(tempDates));
   printf("\nTop K Disjoint Pairs using Algorithm A are:\n");
+
+  
+  struct DisjointSet disjointSet[n - 1];
+  int size = 0, flag = 0;
+  j = 0;
   for (i = 0; i < k; i++) {
-    printf("\n%d ", dateDiff[i].diff);
-    printf("%s ", dateDiff[i].d1.name);
-    printf("%d ", dateDiff[i].d1.day);
-    printf("%d ", dateDiff[i].d1.month);
-    printf("%d ", dateDiff[i].d1.year);
-    printf("%s ", dateDiff[i].d2.name);
-    printf("%d ", dateDiff[i].d2.day);
-    printf("%d ", dateDiff[i].d2.month);
-    printf("%d ", dateDiff[i].d2.year);
+    flag=0;
+    strcpy(disjointSet[size].name1, dateDiff[i].d1.name);
+    strcpy(disjointSet[size].name2, dateDiff[i].d2.name);
+
+      for (j = 0; j < size; j++)
+        {
+            if ((strcmp(dateDiff[i].d2.name, disjointSet[j].name1) == 0) || (strcmp(dateDiff[i].d2.name, disjointSet[j].name2) == 0) || (strcmp(dateDiff[i].d1.name, disjointSet[j].name1) == 0) || (strcmp(dateDiff[i].d1.name, disjointSet[j].name2) == 0))
+                flag = 1;
+        }
+    
+     if(flag==0)
+    {
+          printf("\n %d ", dateDiff[i].diff);
+          printf("%s ", dateDiff[i].d1.name);
+          printf("%s ", dateDiff[i].d2.name);
+    }
+    size++;
   }
 }
 
@@ -222,23 +244,23 @@ void Algorithm_B(struct date d[], int n, int k) {
     }
   }
 
-  printf("\nSorted DOBs: \n");
+  // printf("\nSorted DOBs: \n");
   // for (i = n-1; i >= 0; i--) {
   //   printf("\n%d ", sortedDates[i].day);
   //   printf("%d ", sortedDates[i].month);
   //   printf("%d ", sortedDates[i].year);
   // }
-  for (i = 0; i < n; i++) {
-    printf("\n%d ", sortedDates[i].day);
-    printf("%d ", sortedDates[i].month);
-    printf("%d ", sortedDates[i].year);
-  }
+  // for (i = 0; i < n; i++) {
+  //   printf("\n%d ", sortedDates[i].day);
+  //   printf("%d ", sortedDates[i].month);
+  //   printf("%d ", sortedDates[i].year);
+  // }
 
   // Calculating age differences for each consecutive pair and storing them in
   // another structure DateDiff int diff[n-1];
   struct DateDiff dateDiff[n - 1];
   for (i = 0; i < n - 1; i++) {
-    dateDiff[i].diff = dateDifference(sortedDates[i+1], sortedDates[i]);
+    dateDiff[i].diff = dateDifference(sortedDates[i + 1], sortedDates[i]);
     dateDiff[i].d1 = sortedDates[i];
     dateDiff[i].d2 = sortedDates[i + 1];
   }
@@ -247,37 +269,42 @@ void Algorithm_B(struct date d[], int n, int k) {
   printf("\n");
   struct DateDiff temp2;
   // struct DateDiff disjoint_pair[n];
-  for (i = 0; i < n - 1; i++) 
-  {
-    for(j=i+1; j < n; j++)
-      {
-        if (dateDiff[i].diff > dateDiff[j].diff) {
-          temp2 = dateDiff[i];
-          dateDiff[i] = dateDiff[j];
-          dateDiff[j] = temp2;
-        }
+  for (i = 0; i < n - 1; i++) {
+    for (j = i + 1; j < n; j++) {
+      if (dateDiff[i].diff > dateDiff[j].diff) {
+        temp2 = dateDiff[i];
+        dateDiff[i] = dateDiff[j];
+        dateDiff[j] = temp2;
       }
+    }
   }
 
   // struct date disjoint_pair[n];
 
   // Printing the top k disjoint pairs from the structure
   printf("\nTop K Disjoint pairs using Algorithm B are:\n");
+
+  struct DisjointSet disjointSet[n - 1];
+  int size = 0, flag = 0;
   j = 0;
-  for (i = 1; i < k+1; i++) {
-    // for(k=0;k<j;k++)
-    //   {
-    //     if((disjoint_pair[k].name == dateDiff[i].d1.name) ||
-    //     (disjoint_pair[k].name == dateDiff[i].d2.name))
-    //       continue;
-    //   }
+  for (i = 1; i < k + 1; i++) {
+    flag=0;
+    strcpy(disjointSet[size].name1, dateDiff[i].d1.name);
+    strcpy(disjointSet[size].name2, dateDiff[i].d2.name);
 
-    // strcpy(disjoint_pair[j++].name, dateDiff[i].d1.name);
-    // strcpy(disjoint_pair[j++].name, dateDiff[i].d2.name);
+    for (j = 0; j < size; j++)
+        {
+            if ((strcmp(dateDiff[i].d2.name, disjointSet[j].name1) == 0) || (strcmp(dateDiff[i].d2.name, disjointSet[j].name2) == 0) || (strcmp(dateDiff[i].d1.name, disjointSet[j].name1) == 0) || (strcmp(dateDiff[i].d1.name, disjointSet[j].name2) == 0))
+                flag = 1;
+        }
 
-    printf("\n %d ", dateDiff[i].diff);
-    printf("%s ", dateDiff[i].d1.name);
-    printf("%s ", dateDiff[i].d2.name);
+    if(flag==0)
+    {
+          printf("\n %d ", dateDiff[i].diff);
+          printf("%s ", dateDiff[i].d1.name);
+          printf("%s ", dateDiff[i].d2.name);
+    }
+    size++;
   }
 
   printf("\n");
@@ -386,7 +413,7 @@ void Algorithm_C(struct date d[], int n, int k) {
   // another structure DateDiff int diff[n-1];
   struct DateDiff dateDiff[n - 1];
   for (i = 0; i < n - 1; i++) {
-    dateDiff[i].diff = dateDifference(sortedDates[i], sortedDates[i+1]);
+    dateDiff[i].diff = dateDifference(sortedDates[i], sortedDates[i + 1]);
     dateDiff[i].d1 = sortedDates[i];
     dateDiff[i].d2 = sortedDates[i + 1];
   }
@@ -396,27 +423,43 @@ void Algorithm_C(struct date d[], int n, int k) {
   // for (i = 0; i < 8; i++)
   //   insert(H, i);
 
-
-
-  for (i = 0; i < n-1; i++) {
+  for (i = 0; i < n - 1; i++) {
     insert2(dateDiff, i);
   }
 
-  printf("The date differences inserted in heap are:\n");
-  for (i = 0; i < n-1; i++)
-    printf(" %d", dateDiff[i].diff);
+  // printf("The date differences inserted in heap are:\n");
+  // for (i = 0; i < n - 1; i++)
+  //   printf("\n%d %s %s", dateDiff[i].diff, dateDiff[i].d1.name, dateDiff[i].d2.name);
+
+  struct DisjointSet disjointSet[n - 1];
+  int size = 0, flag = 0;
+  
 
   printf("\nThe date differences sorted by Algorithm C are:\n");
 
-    struct DateDiff tempDiff;
-  for (i = n-2; i >= 0; i--)
+  struct DateDiff tempDiff;
+    for (i = n - 2; i >= 0; i--)
     {
-      tempDiff = Delete2(dateDiff, i);
-      printf(" %d %s %s\n", tempDiff.diff, tempDiff.d2.name, tempDiff.d1.name);
+        flag = 0;
+        tempDiff = Delete2(dateDiff, i);
+        strcpy(disjointSet[size].name1, tempDiff.d1.name);
+        strcpy(disjointSet[size].name2, tempDiff.d2.name);
+      // printf("%s %s ", disjointSet[size].name1, disjointSet[size].name2);
+
+        for (j = 0; j < size; j++)
+        {
+            if ((strcmp(tempDiff.d2.name, disjointSet[j].name1) == 0) || (strcmp(tempDiff.d2.name, disjointSet[j].name2) == 0) || (strcmp(tempDiff.d1.name, disjointSet[j].name1) == 0) || (strcmp(tempDiff.d1.name, disjointSet[j].name2) == 0))
+                flag = 1;
+        }
+      // flag=0;
+        if (flag == 0)
+            printf(" %d %s %s\n", tempDiff.diff, tempDiff.d2.name, tempDiff.d1.name);
+        size++;
     }
+    printf("\n");
   printf("\n");
 
-  // for (i = 0; i < 3; i++)
+  // for (i = 0; i < n; i++)
   //   printf(" %d", dateDiff[i].diff);
   // printf("\n");
 
@@ -426,7 +469,7 @@ void Algorithm_C(struct date d[], int n, int k) {
 
   // for(i=1;i<8;i++)
   //   printf(" %d", Delete(H, i));
-  
+
   // for (i = 0; i < 8; i++)
   //   printf(" %d", H[i]);
   // insert(H, 7);
@@ -457,9 +500,9 @@ int main(void) {
   for (i = 0; i < n + 1; i++) {
     strcpy(names[i], names[i + 1]);
   }
-  for (i = 0; i < n; i++) {
-    printf("%s ", names[i]);
-  }
+  // for (i = 0; i < n; i++) {
+  //   printf("%s ", names[i]);
+  // }
 
   // Storing names in structure
   struct date d[n];
@@ -487,8 +530,8 @@ int main(void) {
     strcpy(dob[i], dob[i + 1]);
   }
 
-  for (i = 0; i < n; i++)
-    printf("%s ", dob[i]);
+  // for (i = 0; i < n; i++)
+  //   printf("%s ", dob[i]);
 
   // Storing dates in structure
   for (i = 0; i < n; i++) {
@@ -497,15 +540,15 @@ int main(void) {
     d[i].year = atoi(splitString(dob[i], 4, 4));
   }
 
-  printf("\n");
-  printf("Dates: ");
-  printf("\n");
+  // printf("\n");
+  // printf("Dates: ");
+  // printf("\n");
 
-  for (i = 0; i < n; i++) {
-    printf("Day: %d ", d[i].day);
-    printf("Month: %d ", d[i].month);
-    printf("Year: %d \n", d[i].year);
-  }
+  // for (i = 0; i < n; i++) {
+  //   printf("Day: %d ", d[i].day);
+  //   printf("Month: %d ", d[i].month);
+  //   printf("Year: %d \n", d[i].year);
+  // }
 
   Algorithm_A(d, n, k);
   // Copied from here........................
