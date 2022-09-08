@@ -1,0 +1,134 @@
+# start from here
+#function to check whether the slope difference of 2 pairs of points is < 0 (i.e. the points are in anti clockwise direction)
+from itertools import count
+
+
+def orientation(p1, p2, p3):
+    x1, y1, x2, y2, x3, y3 = *p1, *p2, *p3
+    d = (y3 - y2) * (x2 - x1) - (y2 - y1) * (x3 - x2)
+
+    if d > 0:  # clockwise
+        return 1
+    elif d < 0:  # Anti clockwise
+        return -1
+    else:  # collinear
+        return 0
+
+
+# initializing points list
+points = []
+
+
+# jarvis march algorith for finding convex hull
+def jarvis(points):
+    # on_hull is the current point to be considered
+    on_hull = min(points)
+    hull = []
+    while True:
+        hull.append(on_hull)  # add the current point to hull
+        next_point = points[0]
+        for point in points:
+            o = orientation(on_hull, next_point, point)
+            if next_point == on_hull or o == 1:
+                next_point = point
+        on_hull = next_point
+        # if we reach to th efirst node then convex hull is completed
+        if on_hull == hull[0]:
+            break
+    return hull
+
+
+# opening file
+f = open("aero.txt", "r")
+# collecting points from the file
+p = 1
+for i in f:
+    if p == 1:
+        g = i
+        p = p + 1
+    elif p == 2:
+        n = i
+        p+=1
+    else:
+        a, b = i.split()
+        points.append((int(a), int(b)))
+
+print(n)
+print(g)
+
+print('\n')
+
+# sorting of points according to 'g'
+visited = []                # declaring and initializing visited array 
+sortedPoints = []           # Array for storing sorted points
+count  = 1                  # variable for counting elements
+k = 0
+for i in points:
+    visited[k] = 0
+    k+=1
+k=0
+
+for i in points:
+    visited[i] = 1
+    sortedPoints[k] = (i[0],i[1])
+    k+=1
+    for j in points:
+        if count == n:
+            break
+
+        if (j[0] == i[0] + g and j[1] == i[1] + g):
+            visited[j] = 1
+            sortedPoints[k] = (j[0], j[1])
+        elif (j[0] == i[0] + g and j[1] == i[1]):
+            visited[j] = 1
+            sortedPoints[k] = (j[0], j[1])
+        elif (j[0] == i[0] and j[1] == i[1] + g):
+            visited[j] = 1
+            sortedPoints[k] = (j[0], j[1])
+        elif (j[0] == i[0] - g and j[1] == i[1]):
+            visited[j] = 1
+            sortedPoints[k] = (j[0], j[1])
+        elif (j[0] == i[0] and j[1] == i[1] - g):
+            visited[j] = 1
+            sortedPoints[k] = (j[0], j[1])
+        elif (j[0] == i[0] - g and j[1] == i[1] - g):
+            visited[j] = 1
+            sortedPoints[k] = (j[0], j[1])
+        elif (j[0] == i[0] - g and j[1] == i[1] + g):
+            visited[j] = 1
+            sortedPoints[k] = (j[0], j[1])
+        elif (j[0] == i[0] + g and j[1] == i[1] - g):
+            visited[j] = 1
+        k+=1
+        count+=1
+
+
+f = open("svg-polygon.svg", 'w')
+# creating the boundary
+f.write("<svg xmlns=\"http://www.w3.org/2000/svg\" version='1.1' width='840' height='640'>\n")
+
+# creating the polygon
+f.write("<polygon stroke=\"black\" points=\"")
+j=0
+for i in points:
+  # print(i[0], i[1])
+  f.write(str(i[0]))
+  f.write(",")
+  f.write(str(i[1]))
+  if j != (len(points) - 1):
+      f.write(" ")
+  j+=1
+
+f.write("\" fill = \"#00ffff\"/>")
+# f.write("<polygon stroke=\"black\" points=\"420,20 380,60 340,140 340,180 500,180 500,140 460,60\" fill = \"#00ffff\"/>")
+# f.write("<polygon stroke=\"black\" points=\"420,20 380,60 380,100 340,140 340,180 500,180 500,140 460,100 460,60\" fill = \"#ffff00\"/>")
+# f.write("<circle cx=\"420\" cy=\"20\" r=\"2\" stroke=\"black\" stroke-width=\"0\" fill=\"black\"/>\n")
+f.write("</svg>\n")
+
+# printing sorted points in CH
+print(jarvis(points))
+
+
+f.close()
+
+
