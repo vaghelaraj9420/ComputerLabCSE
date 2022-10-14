@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAXSIZE 50 
+#define MAXROW 50
+
+struct matrix {
+  int matrix_num;
+  int matrix_row, matrix_col;
+  int* arr[MAXROW];
+  int matrix_array[MAXSIZE][MAXSIZE]; // Define a 2d array for storing the
+                                      // matrix of maximum size MAXSIZE i.e. 50
+};
+
+// int* init(struct matrix m)
+//   {
+//     int num_rows = m.matrix_row;
+//     int* arr[num_rows];      // array of ptrs for dynamically storing matrices
+//   }
+
+int main(int argc, char *argv[]) {
+  FILE *file = fopen("input.txt", "r");
+
+  if (file == NULL) {
+    perror("Unable to open file");
+    exit(1);
+  }
+
+  int i, j, a, b;
+  int num_matrix, row, col;
+
+  char line[100];
+  char *token;
+  fscanf(file, "%d\n", &num_matrix); // Input number of matrices
+
+  struct matrix m[num_matrix];
+
+  for (i = 0; i < num_matrix; i++) {
+    m[i].matrix_num = i;
+    fscanf(file, "%d %d\n", &row,
+           &col);          // Input num of rows and num of cols of a matrix
+    printf("row: %d, col:%d\n", row, col);
+    m[i].matrix_row = row; // storing the num rows in struct matrix
+    m[i].matrix_col = col; // storing the num cols in struct matrix
+    
+    // int* arr[row];        // using an array of pointers to create a dynamic array in heap
+    // m[i].arr[row];
+    // int* arr;
+    // arr = init(m[i]);         // Initializing the dynamic array pointer given in line 15
+    for (j = 0; j < row; j++)
+      m[i].arr[j] = (int*)malloc(col * sizeof(int));
+
+   
+        // arr[j] = (int*)malloc(col * sizeof(int));
+
+    
+    for (a = 0; a < row; a++) {
+      fgets(line, 100, file);
+      token = strtok(line, " ");
+      
+      for (b = 0; b < col; b++) {
+        
+        // while (token != NULL) {
+          // m[i].matrix_array[a][b] = atoi(token);           // storing the element in each matrix
+          m[i].arr[a][b] = atoi(token);
+          // m[i].arr[a][b] = atoi(token);
+          // *(m[i].arr + a*col + b) = atoi(token);
+          printf("%d ", m[i].arr[a][b]);
+          // printf("%s ", m[i].arr[a][b]);
+          token = strtok(NULL, " "); // Moving on to next value in the same row
+                                     // of an input matrix
+        // }
+      }
+      printf("\n");
+    }
+    // break;
+  }
+
+  // display the input matrices taken in the struct matrix...........
+  printf("number of matrices: %d\n", num_matrix);
+  int x,y;
+  for (i = 0; i < num_matrix; i++) {
+    a = m[i].matrix_row;
+    b = m[i].matrix_col;
+    printf("Num rows for matrix %d = %d\n", m[i].matrix_num, a);
+    printf("Num cols for matrix %d = %d\n", m[i].matrix_num, b);
+    for (x = 0; x < m[i].matrix_row; x++) {
+      for (y = 0; y < m[i].matrix_col; y++) {
+        // printf("%d ", m[i].matrix_array[a][b]);
+        printf("%d ", m[i].arr[x][y]);
+      }
+      printf("\n");
+    }
+  }
+
+  fclose(file);
+
+  return 0;
+}
